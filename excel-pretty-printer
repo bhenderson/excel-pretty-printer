@@ -1,0 +1,31 @@
+#!/usr/bin/env python3
+
+"""
+Description:
+    Pretty prints a xlsx file (can probably be used for other OpenDocument formats)
+
+Usage: excel-pretty-printer <file.xlsx>
+
+"""
+
+import sys
+from xmldiff import main as xml, formatting
+from zipfile import ZipFile
+
+xmlFormatter = formatting.XMLFormatter()
+
+def prettyPrint(input):
+    if not input:
+        return
+    # pretty print the xml by duplicating it
+    diff = xml.diff_texts(input, input, formatter=xmlFormatter)
+    print(diff)
+
+def main():
+    inputZip=ZipFile(sys.argv[1])
+    for name in inputZip.namelist():
+        print(f"--- {name}")
+        prettyPrint(inputZip.read(name))
+
+if __name__ == "__main__":
+        main()
